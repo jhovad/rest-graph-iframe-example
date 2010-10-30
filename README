@@ -1,0 +1,39 @@
+Super simple example of Rails Facebook IFrame application on rest-graph gem.
+
+
+NOT FORGET:
+* rest-graph.yaml is config for whole app - just base setting for all FB connection
+* before filter in ApplicationController is setting which could be different for parts of your app (for each action)
+* you need server side session store (ActiveRecord store in this example)
+* now you needn't care about FB sessions, it's done by :write_session => true option
+* cookies are problematic in IFrame so find another solution if you need them
+* all OAuth redirecting story is done by :iframe => true and :auto_authorize => true option
+
+
+HOW TO LET RUN THIS EXAMPLE:
+
+1) create new FB app - http://www.facebook.com/developers/
+	* not forget fill:
+		# Site URL: http://yourserver.com/,
+		# Canvas Page: http://yourserver.com/,
+		# Canvas URL: "something"
+	* and set "Canvas Type" on "IFrame" and enable "Canvas Session Parameter" and "OAuth 2.0 for Canvas (beta)"
+	
+2) download code to yourserver.com
+3) set rest-graph.yaml on values for your created FB app
+4) run rake db:migrate
+5) run script/server on your server
+
+
+HOW TO DEVELOP ON LOCALHOST:
+
+Develop you app on server isn't comfortable. You can do it on your localhost, but what if you are behind NAT? You need access to some server with public IP and create ssh tunnel. It's easy:
+* download code to your localhost and run script/server there (=> Rails 2.3.8 application starting on http://0.0.0.0:3000)
+* on server set "GatewayPorts yes" in /etc/ssh/sshd_config
+* restart ssh service on server: /etc/init.d/ssh restart
+* on your localhost set tunnel: ssh -R 3000:0.0.0.0:3000 -g -n -N username@your-server-address-or-ip.com
+* in your FB app setting on Facebook set Site URL and Canvas Page on http://your-server-address-or-ip.com:3000
+Now are all request on http://your-server-address-or-ip.com:3000 forwarded on your localhost http://0.0.0.0:3000 and you are happy :-)
+
+
+PS: I'm not sure that all setting that i mentioned are absolutely needed, but it works so for me. Please let me know, if there is some misleading information.
